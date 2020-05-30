@@ -24,6 +24,8 @@ const PGController = {
 
   },
 
+
+
   connectAndSeed: function(client) {
     var leftover = 10000000;
     client.none(loadSchema)
@@ -54,7 +56,52 @@ const PGController = {
           console.error(err);
         })
     })
-  } 
+  },
+
+/*
+{
+      "id": "Number",
+      "name": "String",
+      "themes": [ "Strings" ],
+      "salesCategories": [ "Strings" ],
+      "reviews" : {
+        "reviewCount": "Number",
+        "reviewScore": "Number"
+      },
+      "price": "Number",
+      "availability": [
+        {
+          "storeName": "String",
+          "address": {
+            "Street": "String",
+            "City": "String",
+            "State": "String",
+            "Zipcode": "Number",
+            "latitude": "Number",
+            "longitude": "Number",
+          },
+          "quantity": "Number",
+          "restockInterval": "Number",
+        }
+      ],
+      "wishlist": "Boolean",
+      "orderQty" : "Number"
+    }
+*/
+
+  getProductInfo: function(client, request, callback) {
+    client.one(`
+      SELECT id, name, price 
+      FROM products 
+      WHERE id = ${productId}`
+    )
+    .then((res) => {
+      callback(null, res);
+    })
+    .catch((err) => {
+      callback(err, null);
+    })
+  }
 }
 
 module.exports = PGController; 
