@@ -54,37 +54,6 @@ const PGController = {
     })
   },
 
-/*
-{
-      "id": "Number",
-      "name": "String",
-      "themes": [ "Strings" ],
-      "salesCategories": [ "Strings" ],
-      "reviews" : {
-        "reviewCount": "Number",
-        "reviewScore": "Number"
-      },
-      "price": "Number",
-      "availability": [
-        {
-          "storeName": "String",
-          "address": {
-            "Street": "String",
-            "City": "String",
-            "State": "String",
-            "Zipcode": "Number",
-            "latitude": "Number",
-            "longitude": "Number",
-          },
-          "quantity": "Number",
-          "restockInterval": "Number",
-        }
-      ],
-      "wishlist": "Boolean",
-      "orderQty" : "Number"
-    }
-*/
-
   getProductInfo: function(req, callback) {
     db.one(`
       SELECT id, name, price 
