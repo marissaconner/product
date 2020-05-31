@@ -37,7 +37,12 @@ const MongoController = {
     const sku = req.params.id.toString();
     models.products.find({ sku }).toArray()
     .then((product) => {
-      callback(null, product);
+      if( product.length === 1 ){
+        callback(null, product[0]);
+      } else {
+        const skuConflict = new Error('SKU conflict: more than one product has this SKU.');
+        callback(skuConflict, null);
+      }     
     })
     .catch((err) => {
       callback(err, null);
