@@ -11,10 +11,18 @@ const database = process.env.DATABASE || 'productservice';
 const host = process.env.HOST || 'localhost';
 
 const filepath = path.join(__dirname, '..' , 'lib', 'csv');
+
+const db = new MongoClient(`mongodb://${host}`);
 const MongoController = {
 
-  createClient: function() {
-    return new MongoClient(`mongodb://${host}`);
+  getProductInfo: function(req, callback) {
+    db.find({ product_id: req.params.id })
+    .then((doc) => {
+      callback(null, doc);
+    })
+    .catch((err) => {
+      callback(err, null);
+    })
   },
 
   connectAndSeed: function(client) {

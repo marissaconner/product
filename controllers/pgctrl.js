@@ -14,17 +14,13 @@ const database = process.env.DATABASE || 'productservice';
 
 
 const filepath = path.join(__dirname, '..' , 'lib', 'csv');
+
+
+console.log('CreateClient running.');
+const connectionDetails = `postgres://${user}:${password}@${host}:${port}/${database}`;
+const db = pgp(connectionDetails);    
+
 const PGController = {
-
-  createClient: function() {
-    console.log('CreateClient running.');
-    const connectionDetails = `postgres://${user}:${password}@${host}:${port}/${database}`;
-    const db = pgp(connectionDetails);
-    return db;
-
-  },
-
-
 
   connectAndSeed: function(client) {
     var leftover = 10000000;
@@ -89,11 +85,11 @@ const PGController = {
     }
 */
 
-  getProductInfo: function(client, request, callback) {
-    client.one(`
+  getProductInfo: function(req, callback) {
+    db.one(`
       SELECT id, name, price 
       FROM products 
-      WHERE id = ${productId}`
+      WHERE id = ${req.params.id}`
     )
     .then((res) => {
       callback(null, res);
