@@ -9,16 +9,35 @@ const user = process.env.DBUSER || 'productservice';
 const password = process.env.PASSWORD || 'cocacola';
 const database = process.env.DATABASE || 'productservice';
 const host = process.env.HOST || 'localhost';
-
+const url = `mongodb://${host}:${port}`
 const filepath = path.join(__dirname, '..' , 'lib', 'csv');
 
-const db = new MongoClient(`mongodb://${host}`);
+let db = {};
+let models = {
+  products: {},
+  inventories: {},
+  stores: {}
+};
+
+MongoClient.connect( url, function(err, client) {
+  if(err) {
+    console.error(err);
+    return;
+  }
+  console.log('Connection established to Mongo database.');
+  db = client.db(database);
+  models.products = db.collection('products');
+  models.stores = db.collection('stores');
+  models.inventories = db.collection('inventories');
+})
+
 const MongoController = {
 
   getProductInfo: function(req, callback) {
-    db.find({ product_id: req.params.id })
-    .then((doc) => {
-      callback(null, doc);
+    const sku = req.params.id.toString();
+    models.products.find({ sku }).toArray()
+    .then((product) => {
+      callback(null, product);
     })
     .catch((err) => {
       callback(err, null);
